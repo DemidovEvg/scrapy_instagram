@@ -19,8 +19,12 @@ class InstagramSpider(scrapy.Spider):
 
     # Для аутентификации под пользователем
     url_authentication = 'https://www.instagram.com/accounts/login/ajax/'
-    formdata = {'username': 'Onliskill_udm',
-                'enc_password': '#PWD_INSTAGRAM_BROWSER:10:1643131213:AZZQAGTPs6xfu+lt7ppOoFuIqKbWrZ4VaEX53g+SZCn8PJlFrepy7g4RoBJ9hG8g+yNb2R3TWGMrJek2u4SWHgpXYJPp7CijVJirea6j+tAGshfXR9HonVrpXtM9HF0oH+v2RlGNdeDqkBSgLuKb'}
+    # formdata = {'username': 'Onliskill_udm',
+    #             'enc_password': '#PWD_INSTAGRAM_BROWSER:10:1643131213:AZZQAGTPs6xfu+lt7ppOoFuIqKbWrZ4VaEX53g+SZCn8PJlFrepy7g4RoBJ9hG8g+yNb2R3TWGMrJek2u4SWHgpXYJPp7CijVJirea6j+tAGshfXR9HonVrpXtM9HF0oH+v2RlGNdeDqkBSgLuKb'}
+    
+    formdata = {'username': '+79215683286',
+                'enc_password': '#PWD_INSTAGRAM_BROWSER:10:1643313743:AcRQAKb63B5+Dy4ge8xnOUl/MAevvSap/5wNouTpoYX91PZoi64U11uoIDP1A78K5ZBssjU+IHwimBBQAP2Lda5I0Cj0S8Kksoo336D+8Lul3vXSlDUMkYQV6osy0dobEGwDo4HgavuMZgKr9CGqKiM='}
+
 
     def parse(self, response: HtmlResponse):
         csrf_token = re.findall(r'"csrf_token":"(\w+)"', response.text)[0]
@@ -73,36 +77,37 @@ class InstagramSpider(scrapy.Spider):
     def parse_follow_list(self, response: HtmlResponse, **kwargs):
         text_json = response.json()
         if text_json['users']:
-            kwargs['query']['max_id'] = text_json['next_max_id']
-            yield response.follow(f"{kwargs['url']}{urlencode(kwargs['query'])}", 
-                            callback=self.parse_follow_list,
-                            headers={"User-Agent" : "Instagram 155.0.0.37.107"},
-                            cb_kwargs={'user_id': kwargs['user_id'],
-                                        'username': kwargs['username'],
-                                        'query': kwargs['query'].copy(),
-                                        'url': kwargs['url'],
-                                        'followers_or_following': kwargs['followers_or_following']})
-        followers_or_followings = text_json['users']
-        for f in followers_or_followings:
-            user_item = UserItem(user_id = f['pk'],
-                            username = f['username'],
-                            user_photo = f['profile_pic_url'])
-            user = ItemLoader(item=user_item, response=response)
-            yield user.load_item()
+            if 'next_max_id' in text_json:
+                kwargs['query']['max_id'] = text_json['next_max_id']
+                yield response.follow(f"{kwargs['url']}{urlencode(kwargs['query'])}", 
+                                callback=self.parse_follow_list,
+                                headers={"User-Agent" : "Instagram 155.0.0.37.107"},
+                                cb_kwargs={'user_id': kwargs['user_id'],
+                                            'username': kwargs['username'],
+                                            'query': kwargs['query'].copy(),
+                                            'url': kwargs['url'],
+                                            'followers_or_following': kwargs['followers_or_following']})
+            followers_or_followings = text_json['users']
+            for f in followers_or_followings:
+                user_item = UserItem(user_id = f['pk'],
+                                username = f['username'],
+                                user_photo = f['profile_pic_url'])
+                user = ItemLoader(item=user_item, response=response)
+                yield user.load_item()
 
-            if kwargs['followers_or_following'] == 'followers': 
-                username = kwargs['username']              
-                user_follower_name = f['username']
-                
-            else:
-                username = f['username']
-                user_follower_name = kwargs['username']
-                  
-            folower_following_item = FollowerFollowingItem(username=username,
-                                        user_follower_name=user_follower_name)
+                if kwargs['followers_or_following'] == 'followers': 
+                    username = kwargs['username']              
+                    user_follower_name = f['username']
+                    
+                else:
+                    username = f['username']
+                    user_follower_name = kwargs['username']
+                    
+                folower_following_item = FollowerFollowingItem(username=username,
+                                            user_follower_name=user_follower_name)
 
-            folower_following = ItemLoader(item=folower_following_item, response=response)
-            yield folower_following.load_item()
+                folower_following = ItemLoader(item=folower_following_item, response=response)
+                yield folower_following.load_item()
     
 
         
