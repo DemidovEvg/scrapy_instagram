@@ -19,12 +19,8 @@ class InstagramSpider(scrapy.Spider):
 
     # Для аутентификации под пользователем
     url_authentication = 'https://www.instagram.com/accounts/login/ajax/'
-    # formdata = {'username': 'Onliskill_udm',
-    #             'enc_password': '#PWD_INSTAGRAM_BROWSER:10:1643131213:AZZQAGTPs6xfu+lt7ppOoFuIqKbWrZ4VaEX53g+SZCn8PJlFrepy7g4RoBJ9hG8g+yNb2R3TWGMrJek2u4SWHgpXYJPp7CijVJirea6j+tAGshfXR9HonVrpXtM9HF0oH+v2RlGNdeDqkBSgLuKb'}
-    
-    formdata = {'username': '+79215683286',
-                'enc_password': '#PWD_INSTAGRAM_BROWSER:10:1643313743:AcRQAKb63B5+Dy4ge8xnOUl/MAevvSap/5wNouTpoYX91PZoi64U11uoIDP1A78K5ZBssjU+IHwimBBQAP2Lda5I0Cj0S8Kksoo336D+8Lul3vXSlDUMkYQV6osy0dobEGwDo4HgavuMZgKr9CGqKiM='}
-
+    formdata = {'username': 'Onliskill_udm',
+                'enc_password': '#PWD_INSTAGRAM_BROWSER:10:1643131213:AZZQAGTPs6xfu+lt7ppOoFuIqKbWrZ4VaEX53g+SZCn8PJlFrepy7g4RoBJ9hG8g+yNb2R3TWGMrJek2u4SWHgpXYJPp7CijVJirea6j+tAGshfXR9HonVrpXtM9HF0oH+v2RlGNdeDqkBSgLuKb'}
 
     def parse(self, response: HtmlResponse):
         csrf_token = re.findall(r'"csrf_token":"(\w+)"', response.text)[0]
