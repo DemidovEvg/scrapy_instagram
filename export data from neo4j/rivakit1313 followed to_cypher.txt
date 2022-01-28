@@ -1,0 +1,3 @@
+match (p1 {name:'ribakit1313'})-[:followed]->(p2) return p1, p2
+
+result: 168 users - minus ribakit1313

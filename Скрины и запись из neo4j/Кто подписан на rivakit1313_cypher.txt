@@ -1,3 +1,0 @@
-match (p1 {name:'ribakit1313'})<-[:followed]-(p2) return p1, p2
-
-в результате выдает 148 человек минус сам ribakit1313

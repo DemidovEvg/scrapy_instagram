@@ -2,4 +2,4 @@ match (p1 {name:'ribakit1313'})-[:followed]->(p2)<-[:followed]-(p3{name:'dmitriy
 where (p1 {name:'ribakit1313'})<-[:followed]-(p2)-[:followed]->(p3{name:'dmitriygaikov'})
 return p1, p2, p3
 
-в результате выдает 12 человек минус сами ribakit1313 и dmitriygaikov
+result: 12 users - minus ribakit1313 and dmitriygaikov
