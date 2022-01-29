@@ -18,6 +18,7 @@ from scrapy.settings import Settings
 from instagram_project.spiders.instagram import InstagramSpider
 from instagram_project import settings
 
+
 if __name__ == "__main__":
     source = InstagramSpider
     crawler_settings = Settings()
@@ -25,6 +26,7 @@ if __name__ == "__main__":
     process = CrawlerProcess(settings=crawler_settings)
     process.crawl(source)
     process.start()
+    
 
 
     
